@@ -140,7 +140,31 @@ db.getCollectionNames().forEach(function(cards) {
 });
 hQF4xoLiPw5rXQ2c
 #mongodb+srv://captain204:@cluster0-fa1lj.mongodb.net/test?retryWrites=true&w=majority
-#mongodb+srv://captain204:hQF4xoLiPw5rXQ2c@cluster0-fa1lj.mongodb.net/test?retryWrites=true&w=majority
-#shell
-#mongo "mongodb+srv://cluster0-fa1lj.mongodb.net/test"  --username captain204
-#app.config['MONGO_URI'] = 'mongodb://localhost:27017/voucher'
+
+#partial search
+
+db.cards.find({
+      "$or":[
+        {pin:{$regex:/11/}},
+        {pin:{$regex:/11/}},
+        {batch_no:{$regex:/11/}},
+        {price:{$regex:/11/}},
+        {date:{$regex:/11/}}
+
+      ]
+    }).pretty()
+
+#Full text search
+    search = mongo.db.cards.find({"$text": { "$search": string } } )
+
+ # Partial search
+    text ="{}.*".format(string)
+    partial = mongo.db.cards.find({
+        "$or":[
+                {'pin': {"$regex":text,"$options":'i'}},
+                {'batch_no': {"$regex":text,"$options":'i'}},
+                {'price': {"$regex":text,"$options":'i'}},
+                {'date': {"$regex":text,"$options":'i'}},
+                {'transactions': {"$regex":text,"$options":'i'}}
+             ]
+          })
